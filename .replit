@@ -1,6 +1,0 @@
-# Replit configuration removed. This file previously contained Replit-specific
-# settings. The project can be run locally using the npm scripts in
-# package.json:
-#   - npm run dev   # development (server + Vite middleware)
-#   - npm run build && npm start  # production
-

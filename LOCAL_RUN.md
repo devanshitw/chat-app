@@ -110,23 +110,3 @@ PORT=5001 npm run dev
 ```
 
 - PostCSS warning: "A PostCSS plugin did not pass the `from` option to `postcss.parse'" — usually harmless. If you see styling issues, try upgrading PostCSS-related packages (`postcss`, `tailwindcss`, `autoprefixer`, `vite`) or reach out for help.
-
----
-
-## Helpful tips
-
-- If you want a single command to run only the client dev server, consider adding a `client:dev` script to `package.json`:
-
-```json
-{
-  "scripts": {
-    "client:dev": "vite --config vite.config.ts"
-  }
-}
-```
-
-- The integrated `npm run dev` provides the best development DX because the client and API share the same origin (no CORS or proxy required).
-
----
-
-If you want, I can add a `client:dev` script to `package.json` and a short `README` section with these commands. Would you like me to add that change?

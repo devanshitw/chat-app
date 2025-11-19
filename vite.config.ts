@@ -1,23 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
   ],
   resolve: {
     alias: {
@@ -35,6 +21,16 @@ export default defineConfig({
     fs: {
       strict: true,
       deny: ["**/.*"],
+    },
+    // Proxy API requests to the backend dev server so the client can use
+    // relative `/api` paths while developing on the Vite port (5173).
+    // This keeps the client code unchanged and avoids CORS during local dev.
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5005',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

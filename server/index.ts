@@ -67,15 +67,33 @@ app.use((req, res, next) => {
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // Default to 5000 if not specified. This serves both the API and the client.
+  const port = parseInt(process.env.PORT || '5005', 10);
+
+  // Try to listen with reusePort and explicit host first. Some platforms
+  // may not support `reusePort` and will emit an 'error' event with code
+  // like 'ENOTSUP'. In that case, fall back to a simpler listen call so
+  // the server still starts.
+  const listenOptions = { port, host: "0.0.0.0", reusePort: true } as const;
+
+  const onListen = () => {
     log(`serving on port ${port}`);
-  });
+  };
+
+  const onError = (err: any) => {
+    if (err && (err.code === 'ENOTSUP' || err.code === 'EINVAL' || err.code === 'EADDRNOTAVAIL')) {
+      log(`listen with advanced options failed (${err.code}). Falling back to basic listen.`);
+      server.removeListener('error', onError);
+      try {
+        server.listen(port, onListen);
+      } catch (e) {
+        throw e;
+      }
+    } else {
+      throw err;
+    }
+  };
+
+  server.on('error', onError);
+  server.listen(listenOptions, onListen);
 })();

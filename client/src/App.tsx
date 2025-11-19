@@ -36,7 +36,7 @@ function App() {
               <div className="flex flex-col flex-1 min-w-0">
                 <header className="flex items-center justify-between p-2 border-b shrink-0">
                   <SidebarTrigger data-testid="button-sidebar-trigger" />
-                  <h1 className="text-lg font-semibold truncate px-4">ChatGPT-Style App</h1>
+                  <h1 className="text-lg font-semibold truncate px-4">Chat App</h1>
                   <ThemeToggle />
                 </header>
                 <main className="flex-1 overflow-hidden">
